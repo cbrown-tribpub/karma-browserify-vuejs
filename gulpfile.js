@@ -16,15 +16,17 @@ gulp.task('standard', function () {
 
 gulp.task('clean:assets', function () {
   return del([
-    'public/js/**/*',
-    'public/css/**/*',
-    'public/build/**/*'
-
+    'dist/**/*'
   ])
 })
 
 elixir(function (mix) {
   mix.task('clean:assets')
   mix.task('standard')
-  mix.browserify('app.js', './dist')
+  // mix.webpack('webpack/app.js', './dist/app-webpack.js')
+  mix.rollup('rollup/app.js', './dist/app-rollup.js', undefined, require('./rollup.config.js')).scripts([
+    './node_modules/vue/dist/vue.js',
+    './dist/app-rollup.js'
+  ], './dist/app-rollup-bundle.js')
+  mix.browserify('app.js', './dist/app-browserify.js')
 })
